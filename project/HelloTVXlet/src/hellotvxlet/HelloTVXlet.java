@@ -5,34 +5,34 @@ import org.dvb.event.*;
 import org.dvb.ui.*;
 import org.havi.ui.*;
 import org.havi.ui.event.*;
+import java.awt.*;
 
 
 public class HelloTVXlet  implements Xlet, UserEventListener
 {
     private HScene scene;
+
+    private HStaticText lblBlocks[] = new HStaticText[16];
+    private HStaticText lblPoints = new HStaticText("Points:\n0");
+    
+    private Block block[] = new Block[16];
+    
+    int x,y;
+    int size = 130;
+    int margin = 11;
+    
+    int points = 0;
+    
+    Font myfont = new Font("Serif", Font.BOLD, 24);
     
     
-    //private HStaticText lbl1;
-    //private HStaticText lbl2;
-    //private HStaticText lbl3;
-    //private HStaticText lbl4;
-    //private HStaticText lbl5;
-    //private HStaticText lbl6;
-    //private HStaticText lbl7;
-    //private HStaticText lbl8;
-    //private HStaticText lbl9;
-    //private HStaticText lbl10;
-    //private HStaticText lbl11;
-    //private HStaticText lbl12;
-    //private HStaticText lbl13;
-    //private HStaticText lbl14;
-    //private HStaticText lbl15;
-    //private HStaticText lbl16;
-    
-    private HStaticText labels[] = new HStaticText[16];
+    DVBColor backgroundcolor = new DVBColor(new DVBColor(125,195,232,255));
     
     
     public void initXlet(XletContext context) {
+        
+        x = margin;
+        y = margin;
 
         HSceneTemplate sceneTemplate = new HSceneTemplate();
         
@@ -43,49 +43,60 @@ public class HelloTVXlet  implements Xlet, UserEventListener
                 new HScreenPoint(0.0f,0.0f), HSceneTemplate.REQUIRED);
         
         scene = HSceneFactory.getInstance().getBestScene(sceneTemplate);
+        scene.setBackground(backgroundcolor);
+        scene.setBackgroundMode(1);
+        
+        //init lblPoints
+        lblPoints.setSize(125,80);
+        lblPoints.setLocation(580,margin);
+        lblPoints.setBackground(new DVBColor(255,0,0,0));
+        lblPoints.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        lblPoints.setFont(myfont);        
+        scene.add(lblPoints);
         
         
-        boolean initPos = true;
-        int initPosCounter = 0;
-        for(int i = 0; i <= 16; i++)
+
+        //init block labels
+        for(int i = 0; i < lblBlocks.length; i++)
         {
-            labels[i] = new HStaticText("TEST");
             
-            labels[i].setSize(100, 100);
-            labels[i].setBackground(new DVBColor(0,0,0,200));
-            labels[i].setBackgroundMode(HVisible.BACKGROUND_FILL);
-            
-            if(initPos)
+            if(i%4 == 0 && i != 0)
             {
-                for(int y = 0; y < 4; y++)
-                {
-                    for(int x = 0; x <4; x++)
-                    {
-                        labels[initPosCounter].setLocation(x*110, y*110);
-                        
-                        System.out.println(initPosCounter);
-                        
-                        initPosCounter++;
-                        
-                    }
-                }
-                initPos = false;
+                x = margin;
+                y += margin+size;
+                
             }
-            scene.add(labels[i]);
+            
+            lblBlocks[i] = new HStaticText("TEST");
+            lblBlocks[i].setSize(size, size);
+            lblBlocks[i].setBackground(new DVBColor(0,0,0,150));
+            lblBlocks[i].setBackgroundMode(HVisible.BACKGROUND_FILL);
+            
+            lblBlocks[i].setLocation(x,y);
+            x+=margin+size;
+            scene.add(lblBlocks[i]);
+           
+            
+        
+    }
+        //init block[]
+        for(int i = 0; i < block.length; i++)
+        {
+             block[i] = new Block(8); 
              
         }
-        
-        System.out.println("Labels done");
-        
-        
-        
-        
-    
+        System.out.println(block[15].GetValue());
     }
     public void startXlet() {
         scene.validate();
         scene.setVisible(true);
     }
+    
+    public void RefreshBlock()
+    {
+        
+    }
+        
 
     public void pauseXlet() {
      System.out.println("pauseXlet");
@@ -113,5 +124,7 @@ public class HelloTVXlet  implements Xlet, UserEventListener
             }//end of event listener
             
         }//end of method
+    
+
     
 }//end of programm

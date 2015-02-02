@@ -1,41 +1,14 @@
 Signature-Version: 1.0
 Created-By: 1.6.0_16 (Sun Microsystems Inc.)
 BDJ-Signature-Version: 1.0
-SHA1-Digest-Manifest: LrOCKUjVMqh9nMPUVDSvUmBjjb8=
+SHA1-Digest-Manifest: FBSUcz/5XUwo8/A000FJxWT2FV8=
 
 Name: hellotvxlet/HelloTVXlet.class
-SHA1-Digest: ZhM0cq8shKI2dZmcnWUGUmthI6E=
-
-Name: pizza1.m2v
-SHA1-Digest: vrK+Wi6qifkaJEznWjDdB7oCCR0=
-
-Name: pizza1.jpg
-SHA1-Digest: HJDrveN0S5LvEnM33JV6PwAtIJM=
-
-Name: pizza2.jpg
-SHA1-Digest: Yye7ktAVqVx35nlAzaJfWMYIKW0=
-
-Name: pizza4.m2V
-SHA1-Digest: U9QuYotZkNtuTJInfzg7HghMpms=
-
-Name: send.png
-SHA1-Digest: 3VfMJgRfZE5/6ITiNRlPduwJENE=
-
-Name: pizza2.m2v
-SHA1-Digest: ns6ZRJdGTZnROlvNSRAmM0RF5p8=
-
-Name: pizza3.m2v
-SHA1-Digest: //ok4DlqZFvQL8V9DeyIxuklHo8=
-
-Name: pizza4.jpg
-SHA1-Digest: EYtNQg9k3y50YbXOs9RslrTshjo=
+SHA1-Digest: /XQi0q1k/Fae3jApr6D0LRtbyY0=
 
 Name: hellotvxlet/bluray.HelloTVXlet.perm
 SHA1-Digest: 84ZO/rYCyy0JStmaLbg1GDVEFhQ=
 
-Name: pizza1.zip
-SHA1-Digest: QSq4nKUV6dA30cuUuBHoHr6QhVI=
-
-Name: pizza3.jpg
-SHA1-Digest: LlcEpd6kTXa9IebaaQjVD222ZB0=
+Name: hellotvxlet/Block.class
+SHA1-Digest: rmhtWTt5IpbVAGZtMoI2o9iqYGw=
 
