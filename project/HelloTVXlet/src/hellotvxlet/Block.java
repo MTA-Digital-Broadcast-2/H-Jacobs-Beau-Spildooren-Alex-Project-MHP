@@ -18,9 +18,9 @@ public class Block {
     int value;
     DVBColor color;
     
-    public Block(int valueToSet)
+    public Block(int setVal)
     {
-        value = valueToSet;
+        value = setVal;
     }
     
     public DVBColor UpdateColor()
