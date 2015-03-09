@@ -26,11 +26,14 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
     
     int points = 0;
     
+    int moves = 0;
+    
     Font myfont = new Font("Serif", Font.BOLD, 24);
     
     
     DVBColor backgroundcolor = new DVBColor(new DVBColor(125,195,232,255));
     
+    boolean moved = false;
     
     public void initXlet(XletContext context) {
         
@@ -97,6 +100,10 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
         }
         System.out.println(block[15].GetValue());
         
+        UserEventRepository uev = new UserEventRepository("mijn verzameling");
+        uev.addAllArrowKeys();
+        EventManager.getInstance().addUserEventListener(this, uev);
+        
     }
     public void startXlet() {
         scene.validate();
@@ -110,11 +117,16 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
         //update labels
         for(int i = 0; i < block.length; i++)
         {
-            if(block[i].value != 0)
+            if(block[i].value == 0)
             {
-            lblBlocks[i].setTextContent(Integer.toString(block[i].value), HState.NORMAL_STATE);
+                lblBlocks[i].setTextContent("", HState.NORMAL_STATE);
+            }
+            else
+            {
+                lblBlocks[i].setTextContent(Integer.toString(block[i].value), HState.NORMAL_STATE);
             }
             lblBlocks[i].setBackground(block[i].UpdateColor());
+            lblPoints.setTextContent(Integer.toString(points), HState.NORMAL_STATE);
         }
         
     }
@@ -124,11 +136,7 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
         for(int i = 0; i < block.length; i++)
         {
             block[i].SetValue(0);
-            lblBlocks[i].setTextContent("", HState.NORMAL_STATE);
         }
-        
-        
-        
         
        int randomblock1 = (int)(Math.random()* 16); 
        int randomblock2 = (int) (Math.random() * 16);
@@ -186,27 +194,26 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
     }
     
     public void userEventReceived(UserEvent e) {
-        
         if(e.getType() == HRcEvent.KEY_PRESSED){
             switch(e.getCode())
             {
                  case HRcEvent.VK_UP:
-                    System.out.println("RIGHT");
-                    
+                    System.out.println("UP");
+                    Move(0);
                     break;
                     
                 case HRcEvent.VK_DOWN:
-                    System.out.println("RIGHT");
-                    
+                    System.out.println("DOWN");
+                    Move(1);           
                     break;
                 
                 case HRcEvent.VK_LEFT:
                     System.out.println("LEFT");
-                    
+                    Move(2);
                     break;
                 case HRcEvent.VK_RIGHT:
                     System.out.println("RIGHT");
-                    
+                    Move(3);
                     break;
                     
                
@@ -224,6 +231,181 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
             System.out.println("RESET");
         }
     
+    }
+    
+    public void Move(int direction) //0 1 2 3 = up, down, left, right
+    {
+        switch(direction)
+        {
+            case 0: //up
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int i = 4; i <= 15; i++)
+                    {
+                        if (block[i].value != 0)
+                        {
+                            if (block[i-4].value == 0)
+                            {
+                                block[i-4].value= block[i].value;
+                                block[i].value = 0;
+                                moved = true;
+                            }
+                         else if (block[i].value == block[i-4].value)
+                            {
+                                block[i-4].value += block[i].value;
+                                block[i].value = 0;
+                                moved = true;
+
+                                points += block[i-4].value;
+                             }
+                        }
+                    }
+
+               }
+               if (moved)
+               {
+                   RefreshBlock();
+                   Spawnblock();
+
+               }
+            break;
+            case 1: //down
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int i = 11; i >= 0; i--)
+                    {
+                        if (block[i].value != 0)
+                        {
+                            if (block[i+4].value == 0)
+                            {
+                                block[i+4].value = block[i].value;
+                                block[i].value = 0;
+                                moved = true;
+                            }
+                            else if (block[i].value == block[i+4].value)
+                            {
+                                block[i+4].value += block[i].value;
+                                block[i].value = 0;
+                                moved = true;
+
+                               points += block[i+4].value;
+                             }
+                          }
+                     }
+                }
+                if (moved)
+               {
+                    RefreshBlock();    
+                    Spawnblock();
+               }
+            break;
+                            
+            case 2: //left
+                for (int j = 0; j < 3; j++)
+                            {
+                                for (int i = 0; i <= 15; i++)
+                                {
+                                    if (block[i].value != 0
+                                        && i != 0
+                                        && i != 4
+                                        && i != 8
+                                        && i != 12)
+                                    {
+                                        if (block[i-1].value == 0)
+                                        {
+                                            block[i-1].value = block[i].value;
+                                            block[i].value = 0;
+                                            moved = true;
+                                        }
+                                        else if (block[i].value == block[i-1].value)
+                                        {
+                                            block[i-1].value += block[i].value;
+                                            block[i].value = 0;
+                                            moved = true;
+                                            //addedLeft = true;
+
+                                            points += block[i-1].value;
+                                        }
+                                    }
+                                }
+
+                            }
+                            if (moved)
+                            {
+                                RefreshBlock();
+                                Spawnblock();
+                            }
+                            break;
+                            
+            case 3: //right
+                     for (int j = 0; j < 3; j++)
+                            {
+                                for (int i = 15; i >= 0; i--)
+                                {
+                                    if (block[i].value != 0
+                                        && i != 3
+                                        && i != 7
+                                        && i != 11
+                                        && i != 15)
+                                    {
+                                        if (block[i+1].value == 0)
+                                        {
+                                            block[i+1].value = block[i].value;
+                                            block[i].value = 0;
+                                            moved = true;
+                                        }
+                                        else if (block[i].value == block[i+1].value)
+                                        {
+                                            block[i+1].value += block[i].value;
+                                            block[i].value = 0;
+                                            moved = true;
+                                            //addedRight = true;
+
+                                            points += block[i+1].value;
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            if(moved)
+                            {
+                                RefreshBlock();
+                                Spawnblock();
+                            }
+                            break;
+        }
+    }
+    
+    public void Spawnblock()
+    {
+        if (moved)
+            {                
+                boolean unavailable = true;
+                while (unavailable)
+                {
+                    int rndblock = (int)(Math.random() * 100);
+                    
+                    if (rndblock < 75) 
+                    { rndblock = 2; }
+                    else 
+                    { rndblock = 4; }
+
+                    int position = (int)(Math.random() * 16);
+                    if (block[position].value == 0)
+                    {
+                        block[position].value = rndblock;
+                        unavailable = false;
+                        System.out.println("SPAWN");
+                    }
+                }
+
+                moves++;
+                
+                RefreshBlock();
+                moved = false;                
+            
+            }
     }
     
 }//end of programm
