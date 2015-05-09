@@ -7,6 +7,7 @@ import org.havi.ui.*;
 import org.havi.ui.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.*;
 
 
 public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
@@ -15,6 +16,8 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
 
     private HStaticText lblBlocks[] = new HStaticText[16];
     private HStaticText lblPoints = new HStaticText("Points:\n0");
+    private HStaticText lblWin = new HStaticText("YOU WIN");
+    private HStaticText lblHS = new HStaticText("Highscores: ");
     
     private HTextButton resetbutton = new HTextButton("Reset");
     
@@ -28,14 +31,28 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
     
     int moves = 0;
     
+    boolean win = false;
+    
     Font myfont = new Font("Serif", Font.BOLD, 24);
+    Font winfont = new Font("Serif", Font.BOLD, 30);
     
     
     DVBColor backgroundcolor = new DVBColor(new DVBColor(125,195,232,255));
     
     boolean moved = false;
     
+    private Highscore HS = new Highscore();
+    
+    private String hsstring;
+    
     public void initXlet(XletContext context) {
+        
+        HS.ReadHighscore();
+        
+        for(int i = 0; i < HS.arrHighscore.length; i++)
+        {
+           //System.out.println(Integer.toString(HS.arrHighscore[i]));
+        }
         
         x = margin;
         y = margin;
@@ -59,6 +76,22 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
         lblPoints.setBackgroundMode(HVisible.BACKGROUND_FILL);
         lblPoints.setFont(myfont);        
         scene.add(lblPoints);
+        
+        //init lblWin
+        lblWin.setSize(125, 80);
+        lblWin.setLocation(720,150);
+        lblWin.setBackground(new DVBColor(255,0,0,0));
+        lblWin.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        lblWin.setFont(winfont);        
+         scene.add(lblWin);
+         
+         //init lblHS
+        lblHS.setSize(125, 500);
+        lblHS.setLocation(580,150);
+        lblHS.setBackground(new DVBColor(255,0,0,0));
+        lblHS.setBackgroundMode(HVisible.BACKGROUND_FILL);
+        lblHS.setFont(myfont);        
+        scene.add(lblHS);
         
         //init resetbutton
         resetbutton.setSize(130,50);
@@ -89,7 +122,7 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
             x+=margin+size;
             scene.add(lblBlocks[i]);
            
-            
+           
         
     }
         //init block[]
@@ -98,7 +131,6 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
              block[i] = new Block(i);
              
         }
-        System.out.println(block[15].GetValue());
         
         UserEventRepository uev = new UserEventRepository("mijn verzameling");
         uev.addAllArrowKeys();
@@ -127,7 +159,20 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
             }
             lblBlocks[i].setBackground(block[i].UpdateColor());
             lblPoints.setTextContent(Integer.toString(points), HState.NORMAL_STATE);
+            
+            if(block[i].value == 2048)
+            {
+                lblWin.setLocation(580,140);
+            }
+            
         }
+        
+        hsstring = "highscores: \n";
+        for(int i = 0; i < HS.arrHighscore.length-1; i++)
+        {
+            hsstring += Integer.toString(i+1) + ". " + HS.arrHighscore[i] + "\n";
+        }
+        lblHS.setTextContent(hsstring, HState.NORMAL_STATE);
         
     }
     
@@ -156,8 +201,8 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
            }
        }       
        
-       System.out.println(randomblock1);
-       System.out.println(randomblock2);
+       //System.out.println(randomblock1);
+       //System.out.println(randomblock2);
        
        int randomvalue1 = (int)(Math.random() * 4);
        
@@ -215,7 +260,6 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
                     System.out.println("RIGHT");
                     Move(3);
                     break;
-                    
                
             }
             
@@ -227,8 +271,13 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
         
         if(e.getActionCommand() == "resetbutton")
         {
+            HS.SaveHighscore(points);
             Reset();
             System.out.println("RESET");
+            lblWin.setLocation(720,180);
+            points = 0;
+            lblPoints.setTextContent(Integer.toString(points), HState.NORMAL_STATE);
+            
         }
     
     }
@@ -408,4 +457,7 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
             }
     }
     
-}//end of programm
+    //write to file
+    
+    
+}//end of programm :)
