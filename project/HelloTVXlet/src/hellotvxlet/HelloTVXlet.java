@@ -201,9 +201,6 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
            }
        }       
        
-       //System.out.println(randomblock1);
-       //System.out.println(randomblock2);
-       
        int randomvalue1 = (int)(Math.random() * 4);
        
         if(randomvalue1 == 0)
@@ -226,6 +223,7 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
            block[randomblock2].SetValue(2);
         }
        RefreshBlock();
+       
     }//end of reset
     
         
@@ -235,8 +233,8 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
     }
 
     public void destroyXlet(boolean unconditional) {
-     System.out.println("destroyXLet");
-    }
+        System.out.println("destroyXLet");
+       }
     
     public void userEventReceived(UserEvent e) {
         if(e.getType() == HRcEvent.KEY_PRESSED){
@@ -284,8 +282,13 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
     
     public void Move(int direction) //0 1 2 3 = up, down, left, right
     {
+        for(int i = 0; i < block.length; i++)
+        {
+           block[i].added = false;     
+        }
         switch(direction)
         {
+            
             case 0: //up
                 for (int j = 0; j < 3; j++)
                 {
@@ -295,15 +298,19 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
                         {
                             if (block[i-4].value == 0)
                             {
-                                block[i-4].value= block[i].value;
+                                block[i-4].value = block[i].value;
+                                block[i-4].added = block[i].added;
                                 block[i].value = 0;
+                                block[i].added = false;
                                 moved = true;
+                                
                             }
-                         else if (block[i].value == block[i-4].value)
+                         else if (block[i].value == block[i-4].value && !block[i-4].added && !block[i].added)
                             {
                                 block[i-4].value += block[i].value;
                                 block[i].value = 0;
                                 moved = true;
+                                block[i-4].added = true;
 
                                 points += block[i-4].value;
                              }
@@ -328,14 +335,17 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
                             if (block[i+4].value == 0)
                             {
                                 block[i+4].value = block[i].value;
+                                block[i+4].added = block[i].added;
                                 block[i].value = 0;
+                                block[i].added = false;
                                 moved = true;
                             }
-                            else if (block[i].value == block[i+4].value)
+                            else if (block[i].value == block[i+4].value && !block[i+4].added && !block[i].added)
                             {
                                 block[i+4].value += block[i].value;
                                 block[i].value = 0;
                                 moved = true;
+                                block[i+4].added = true;
 
                                points += block[i+4].value;
                              }
@@ -363,17 +373,22 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
                                         if (block[i-1].value == 0)
                                         {
                                             block[i-1].value = block[i].value;
+                                            block[i-1].added = block[i].added;
                                             block[i].value = 0;
+                                            block[i].added = false;
+                                            
                                             moved = true;
+                                            //System.out.println("moved block "+i+" to "+(i-1));
                                         }
-                                        else if (block[i].value == block[i-1].value)
+                                        else if (block[i].value == block[i-1].value && !block[i-1].added && !block[i].added)
                                         {
                                             block[i-1].value += block[i].value;
                                             block[i].value = 0;
                                             moved = true;
-                                            //addedLeft = true;
+                                            block[i-1].added = true;
 
                                             points += block[i-1].value;
+                                             System.out.println("added block "+i+" with "+(i-1));
                                         }
                                     }
                                 }
@@ -400,15 +415,17 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
                                         if (block[i+1].value == 0)
                                         {
                                             block[i+1].value = block[i].value;
+                                            block[i+1].added = block[i].added;
                                             block[i].value = 0;
+                                            block[i].added = false;
                                             moved = true;
                                         }
-                                        else if (block[i].value == block[i+1].value)
+                                        else if (block[i].value == block[i+1].value && !block[i+1].added && !block[i].added)
                                         {
                                             block[i+1].value += block[i].value;
                                             block[i].value = 0;
                                             moved = true;
-                                            //addedRight = true;
+                                            block[i+1].added = true;
 
                                             points += block[i+1].value;
                                         }
@@ -456,8 +473,6 @@ public class HelloTVXlet  implements Xlet, UserEventListener, HActionListener
             
             }
     }
-    
-    //write to file
     
     
 }//end of programm :)

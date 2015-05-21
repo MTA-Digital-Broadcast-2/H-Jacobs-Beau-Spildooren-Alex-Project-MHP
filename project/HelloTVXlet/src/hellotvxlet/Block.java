@@ -9,16 +9,12 @@ package hellotvxlet;
 
 import org.dvb.ui.*;
 
-/**
- *
- * @author student
- */
-
-
 
 public class Block {
     int value;
     DVBColor color;
+    
+    boolean added = false;
     
     public Block(int setVal)
     {
